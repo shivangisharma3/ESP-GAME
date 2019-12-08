@@ -22,17 +22,18 @@ router.route('/search').get((req,res)=>{
     console.log(source)
     console.log(destination)
     Flight.aggregate([
+      {$match: {'src':source} },
       {$lookup:
-       {
-         from: 'flights',
+         {from: 'flights',
          localField: 'dest',
          foreignField: 'src',
          as: 'conn'
-       }
+      }
       },
-      {$match: {'src':source,'conn.dest':destination} }
-       ]).
-        then(conn => res.json(conn)).
+      {$unwind:{path: "$conn"}},
+      {$match: {'conn.dest':destination}},
+       ])
+       .then(conn => res.json(conn)).
         catch(error => console.error('error', error));
     /*
     
