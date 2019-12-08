@@ -16,12 +16,14 @@ connection.once('open',()=>{
     console.log('MongoDb database connection :Successful')
 })
 
-//const exercisesRouter = require('./routes/exercises');
+const exercisesRouter = require('./routes/exercises');
 const usersRouter = require('./routes/users');
-//const gamesRouter = require('./routes/games');
+const gamesRouter = require('./routes/games');
+const flightsRouter = require('./routes/flights');
 
 app.use('/users',usersRouter);
-//app.use('/exercises',exercisesRouter);
+app.use('/exercises',exercisesRouter);
+app.use('/flights',flightsRouter);
 /*app.get('/',(req,res)=>{
     res.send("Multiplayer Game");
 });*/
