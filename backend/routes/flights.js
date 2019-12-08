@@ -16,6 +16,23 @@ router.route('/add').post((req,res)=>{
         .catch(err => res.status(400).json('Error: '+ err));
 });
 
+router.route('/nonstop/search').get((req,res)=>{
+  const source =req.query.src;
+  const destination = req.query.dest;
+  console.log(source)
+  console.log(destination)
+  Flight.find({src:source,dest:destination}, function(err, flights) {
+    if (err) {
+      console.error(err);
+      res.status(500).json({
+        error: 'Internal error please try again'});
+    }
+    else
+      {   console.log(flights)
+          res.json(flights);
+      }
+    })
+  });
 router.route('/search').get((req,res)=>{
     const source =req.query.src;
     const destination = req.query.dest;
@@ -37,17 +54,7 @@ router.route('/search').get((req,res)=>{
         catch(error => console.error('error', error));
     /*
     
-      Flight.find({src:source,dest:destination}, function(err, flights) {
-        if (err) {
-          console.error(err);
-          res.status(500).json({
-            error: 'Internal error please try again'});
-        }
-        else
-          {   console.log(flights)
-              res.json(flights);
-          }
-        })
+      
     */
 });
 module.exports =router;
