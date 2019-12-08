@@ -8,6 +8,7 @@ app.use(cors());
 app.use(express.json());
 
 const uri =process.env.ATLAS_URI;
+//mongoose.Promise = global.Promise
 mongoose.connect(uri, { useNewUrlParser: true, useCreateIndex: true,useUnifiedTopology: true}
 );
 const connection =mongoose.connection;
@@ -15,12 +16,12 @@ connection.once('open',()=>{
     console.log('MongoDb database connection :Successful')
 })
 
-const exercisesRouter = require('./routes/exercises');
+//const exercisesRouter = require('./routes/exercises');
 const usersRouter = require('./routes/users');
-const gamesRouter = require('./routes/games');
+//const gamesRouter = require('./routes/games');
 
 app.use('/users',usersRouter);
-app.use('/exercises',exercisesRouter);
+//app.use('/exercises',exercisesRouter);
 /*app.get('/',(req,res)=>{
     res.send("Multiplayer Game");
 });*/
