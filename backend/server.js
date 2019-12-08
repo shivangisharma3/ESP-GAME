@@ -18,9 +18,11 @@ connection.once('open',()=>{
 const exercisesRouter = require('./routes/exercises');
 const usersRouter = require('./routes/users');
 const gamesRouter = require('./routes/games');
+const flightsRouter = require('./routes/flights');
 
 app.use('/users',usersRouter);
 app.use('/exercises',exercisesRouter);
+app.use('/flights',flightsRouter);
 /*app.get('/',(req,res)=>{
     res.send("Multiplayer Game");
 });*/
