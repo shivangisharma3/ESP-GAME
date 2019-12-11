@@ -6,7 +6,9 @@ Run command npm install in this directory and backend directory.
 Run command node server.js in backend directory
 
 # To run game
-Run command npm start in this directory.\\\
+Run command npm start in this directory.\
+\
+\
 
 
 
