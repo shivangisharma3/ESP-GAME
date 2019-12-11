@@ -1,13 +1,14 @@
 const router = require('express').Router();
 let User =require('../models/user.model');
-
+let UserSession =require('../models/user_session.model');
 router.route('/').get((req,res)=>{
     res.send("ok");
 });
 router.route('/login/verify').get((req,res)=>{
   const token=req.query.token;
-  User.find({
-    _id: token
+  UserSession.find({
+    userID: token,
+    isDeleted: false
   }, (err, sessions) => {
     if (err) {
       console.log(err);
@@ -32,9 +33,10 @@ router.route('/login/verify').get((req,res)=>{
 });
 router.route('/logout').get((req,res)=>{
   const token=req.query.token;
-  User.find({
-    _id: token
-  }, (err, sessions) => {
+  UserSession.findOneAndDelete({
+    userID: token,
+    isDeleted: false},
+     {} , (err, sessions) => {
     if (err) {
       console.log(err);
       return res.send({
@@ -42,13 +44,18 @@ router.route('/logout').get((req,res)=>{
         message: 'Error: Server error'
       });
     }
-    if (sessions.length != 1) {
-      return res.send({
-        success: false,
-        message: 'Error: Invalid'
-      });
-    } else {
+    else if(sessions==null)
+    {
+        //console.log(token);
+        return res.send({
+          success: false,
+          message: 'No match'
+        });
+      
+    }
+   else {
       // DO ACTION
+      //console.log(sessions);
       return res.send({
         success: true,
         message: 'Logout Sucessful'
@@ -73,7 +80,7 @@ router.route('/login').post((req,res)=>{
           console.error(err);
           res.status(500).send({
             success: false,
-            message: 'Error: server error'
+            message: 'Error: server error1'
           });
         } else if (!user) {
           console.log("Login Unsuccessful");
@@ -89,7 +96,7 @@ router.route('/login').post((req,res)=>{
                       console.error(err);
                       res.status(500).send({
                         success: false,
-                        message: 'Error: server error'
+                        message: 'Error: server error2'
                     });
                   }
                   else if(!isMatch)
@@ -102,12 +109,23 @@ router.route('/login').post((req,res)=>{
                   }
                   else
                   {
+                    const userSession = new UserSession();
+                    userSession.userID = user._id;
+                    userSession.save((err, doc) => {
+                      if (err) {
+                        console.log(err);
+                        return res.send({
+                          success: false,
+                          message: 'Error: server error3'
+                        });
+                      }
                       console.log("Login Successful");
                       res.send({
                         success: true,
                         message: 'Successful',
                         token: user._id
                     });
+                  })
                   }
               })
           }

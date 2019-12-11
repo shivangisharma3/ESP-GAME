@@ -6,7 +6,7 @@ const app= express();
 const port= process.env.Port || 5000;
 app.use(cors());
 app.use(express.json());
-
+process.env['count']=0;
 const uri =process.env.ATLAS_URI;
 //mongoose.Promise = global.Promise
 mongoose.connect(uri, { useNewUrlParser: true, useCreateIndex: true,useUnifiedTopology: true}
@@ -19,14 +19,14 @@ connection.once('open',()=>{
 const exercisesRouter = require('./routes/exercises');
 const usersRouter = require('./routes/users');
 const gamesRouter = require('./routes/games');
-const flightsRouter = require('./routes/flights');
 
 app.use('/users',usersRouter);
 app.use('/exercises',exercisesRouter);
-app.use('/flights',flightsRouter);
+app.use('/games',gamesRouter);
 /*app.get('/',(req,res)=>{
     res.send("Multiplayer Game");
 });*/
+
 app.listen(port,()=>{
     console.log(`Server is running on port: ${port}`);
 });

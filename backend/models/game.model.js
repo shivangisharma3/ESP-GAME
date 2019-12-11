@@ -3,6 +3,7 @@ const Schema =mongoose.Schema;
 
 const gameSchema = new Schema({
     game_id: {type: Number , required: true},
+    begin: {type: Boolean,required: true},
     q1: {type: Number, required: true},
     q2: {type: Number, required: true},
     q3: {type: Number, required: true},

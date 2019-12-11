@@ -16,20 +16,21 @@ export default class LoginUser extends Component {
         signInPassword: '',
         signUpUsername: '',
         signUpPassword: '',
+       
       };
-  
+ 
       this.onTextboxChangeSignInUsername = this.onTextboxChangeSignInUsername.bind(this);
       this.onTextboxChangeSignInPassword = this.onTextboxChangeSignInPassword.bind(this);
       this.onTextboxChangeSignUpUsername = this.onTextboxChangeSignUpUsername.bind(this);
       this.onTextboxChangeSignUpPassword = this.onTextboxChangeSignUpPassword.bind(this);
-      
       this.onSignIn = this.onSignIn.bind(this);
       this.onSignUp = this.onSignUp.bind(this);
       this.logout = this.logout.bind(this);
+      this.game = this.game.bind(this);
 
     }
   componentDidMount() {
-    const obj = getFromStorage('Airbus');
+    const obj = getFromStorage('ESP');
     if (obj && obj.token) {
       const { token } = obj;
       // Verify token
@@ -76,7 +77,36 @@ export default class LoginUser extends Component {
       signUpPassword: event.target.value,
     });
   }
-
+  game(){
+    const obj = getFromStorage('ESP');
+    if (obj && obj.token) {
+      const { token } = obj;
+      // Verify token
+      axios.get('http://localhost:5000/games/begin?token='+token)
+        //.then(res => res.json())
+        .then(res => {
+          if (res.data.success) {
+            console.log(res.data)
+            setInStorage('Games', { game_id: res.data.game_token,q1:res.data.q1t,
+              q2:res.data.q2t,
+              q3:res.data.q3t,
+              q4:res.data.q4t,
+              q5:res.data.q5t,
+              begin:res.data.begint
+             });
+            window.location='/game'
+          } else {
+            this.setState({
+              isLoading: false,
+            });
+          }
+        });
+    } else {
+      this.setState({
+        isLoading: false,
+      });
+    }
+  }
   onSignUp() {
     // Grab state
     const {
@@ -120,7 +150,7 @@ export default class LoginUser extends Component {
     axios.post('http://localhost:5000/users/login',{"username": signInUsername,"password":signInPassword})
     .then(res => {
         if (res.data.success) {
-          setInStorage('Airbus', { token: res.data.token });
+          setInStorage('ESP', { token: res.data.token });
           this.setState({
             signInError: res.data.message,
             isLoading: false,
@@ -134,13 +164,19 @@ export default class LoginUser extends Component {
             isLoading: false,
           });
         }
+      })
+      .catch(err => {
+        this.setState({
+          signInError: "No response",
+          isLoading: false,
+        });
       });
   }
   logout() {
     this.setState({
       isLoading: true,
     });
-    const obj = getFromStorage('Airbus');
+    const obj = getFromStorage('ESP');
     if (obj && obj.token) {
       const { token } = obj;
       // Verify token
@@ -173,7 +209,7 @@ export default class LoginUser extends Component {
       signInPassword,
       signUpUsername,
       signUpPassword,
-      signUpError,
+      signUpError
     } = this.state;
 
     if (isLoading) {
@@ -184,11 +220,7 @@ export default class LoginUser extends Component {
       return (
         <div>
           <div>
-            {
-              (signInError) ? (
-                <p>{signInError}</p>
-              ) : (null)
-            }
+            
             <p>Sign In</p>
             <input
               type="Username"
@@ -205,11 +237,16 @@ export default class LoginUser extends Component {
             />
             <br />
             <button onClick={this.onSignIn}>Sign In</button>
+            {
+              (signInError) ? (
+                <p>{signInError}</p>
+              ) : (null)
+            }
           </div>
           <br />
           <br />
           <div>
-            
+           
             <p>Sign Up</p>
             <input
               type="Username"
@@ -237,8 +274,11 @@ export default class LoginUser extends Component {
     return (
       <div>
         <p>Welcome to your Account</p>
+        <button onClick={this.game}>Begin Game</button>
         <button onClick={this.logout}>Logout</button>
       </div>
+
+
     );
   }
 }
