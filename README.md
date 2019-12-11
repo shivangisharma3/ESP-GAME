@@ -1,3 +1,18 @@
+# ESP-GAME
+To install dependencies\
+Run command npm install in this directory and backend directory.
+
+# To run server
+Run command node server.js in backend directory
+
+# To run game
+Run command npm start in this directory.\\\
+
+
+
+
+
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
@@ -66,6 +81,4 @@ This section has moved here: https://facebook.github.io/create-react-app/docs/de
 ### `npm run build` fails to minify
 
 This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
-# Airbus
-# Game_ESP
 # Game_ESP
